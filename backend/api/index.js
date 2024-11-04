@@ -21,24 +21,40 @@ const mysqlPool = mysql.createPool({
 });
 
 // Util Vars
-const crimesCategories = ["contraordenacoes_nauticas", "contraordenacoes_rodoviarias", "contra_estado", "contra_identidade_cultural", "contra_patrimonio", "contra_pessoas", "contra_vida_sociedade"];
+const categorias = ["bebidas", "comidas", "menus_carne", "menus_peixe", "menus_carne_peixe"];
 
-// Routes to fetch crimes
-app.get("/crimes/:category", async (req, res) => {
+// Route to fetch categories
+app.get("/categorias/:category", async (req, res) => {
     // Check if category is valid
     const category = req.params.category;
-    if (!crimesCategories.includes(category)) {
-        res.status(400).json({ error: "Invalid category" });
+    if (!categorias.includes(category)) {
+        res.status(400).json({ error: "Categoria inválida" });
         return;
     }
 
-    // Fetch the crimes
+    // Fetch the items from the category
     try {
         const [rows] = await mysqlPool.query(`SELECT * FROM ${category}`);
         res.json(rows);
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: "Failed to fetch crimes" });
+    }
+});
+
+// Route to fetch a specific item
+app.get("/items/:id", async (req, res) => {
+    // Fetch the item from the database
+    try {
+        const [rows] = await mysqlPool.query(`SELECT * FROM cardapio WHERE id = ?`, [req.params.id]);
+        if (rows.length === 0) {
+            res.status(404).json({ error: "Item não encontrado" });
+            return;
+        }
+        res.json(rows[0]);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Failed to fetch item" });
     }
 });
 
