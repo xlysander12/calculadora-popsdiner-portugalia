@@ -75,22 +75,13 @@ function format_crime_article(crime) {
 function format_crime_prision(crime) {
     return crime.prisao_min + "-" + crime.prisao + "-" + crime.prisao_max + " anos";
 }
-function build_crime_card(parent_div, item) {
+function build_item_card(parent_div, item) {
     // Create new element
     let card = document.createElement("div");
     card.className = "col card-group"
     card.innerHTML =
-        `<div class="card articleCard ${get_color_from_gravity(0)}">
+        `<div class="card articleCard">
             <div class="card-body">
-                <div class="row g-0">
-                    <div class="col-auto">
-                        <small class="articleType">placeholder</small>
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                                <!---->
-                                <!---->
-                    </div>
-                </div>
                     <p>${item.nome}</p>
             </div>
             <div class="d-flex col-12 articleDetails px-3">
@@ -101,8 +92,16 @@ function build_crime_card(parent_div, item) {
             </div>
         </div>`;
 
-    card.addEventListener("click", () => {
-        add_crime_to_summary(item);
+    card.addEventListener("click", async () => {
+        let item_query = await fetch(`${get_api_url()}/items/${item.id}`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}});
+
+        if (item_query.status !== 200) {
+            return;
+        }
+
+        let item_json = await item_query.json();
+
+        add_item_to_summary(item_json);
     });
 
     document.getElementById(parent_div).appendChild(card);
@@ -121,20 +120,20 @@ function search_items(search) {
     categories.forEach((category) => {
         stored_items[category].forEach((item) => {
             if (item.nome.toLowerCase().includes(search.toLowerCase())) {
-                build_crime_card(category, item);
+                build_item_card(category, item);
             }
         });
     });
 
 }
 
-function add_crime_to_summary(crime) {
-    items_adicionados.push(crime);
+function add_item_to_summary(item) {
+    items_adicionados.push(item);
     update_summary();
 }
 
-function remove_crime_from_summary(crime) {
-    items_adicionados.splice(items_adicionados.map(c => c.nome).indexOf(crime.nome), 1);
+function remove_crime_from_summary(item) {
+    items_adicionados = items_adicionados.filter((element) => element.id !== item);
     update_summary();
 }
 
@@ -178,12 +177,12 @@ function format_money(amount) {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function update_summary() {
+async function update_summary() {
     // Clean Summary
     document.getElementById("summary_whole_box").innerHTML =
         `<div id="summary_whole_box" class="card sticky-top-resume">
             <div class="card-header">
-                <h1 class="text-center">Resumo</h1>
+                <h1 class="text-center">Resumo da Venda</h1>
             </div>
 
             <div id="article_list" class="card-body articleList">
@@ -191,83 +190,41 @@ function update_summary() {
             </div>
         </div>`
 
-    // If there are crimes added to summary show them
+    // If there are items added to summary show them
     if (items_adicionados.length > 0) {
         // Add Crimes to List
         let list = document.getElementById("article_list");
         list.innerHTML = "";
 
-        let i;
-        items_adicionados.forEach((crime) => {
-            let crime_json = JSON.stringify(crime);
+        for (let item of items_adicionados) {
             list.innerHTML += `<div role="alert" class="col-12 alert alert-dark alert-fine d-flex p-1 px-3">
                     <div class="col-auto">
-                        <div class="row text-article">
-                            <small>
-                                ${format_crime_article(crime)}
-                            </small>
-                        </div>
-                        <div class="row" style="width: 20rem"><small style="word-wrap: break-word">${crime.nome}</small></div>
+                        <div class="row" style="width: 20rem"><small style="word-wrap: break-word">${item.nome}</small></div>
                         <div class="row text-article">
                             <small>
                                 <div style="color: lightgray">
-                                    <span><i class="fas fa-euro-sign align-self-center"></i>&nbsp;${format_money(crime.coima)}</span>
-                                    &nbsp;
-                                    <span><i class="far fa-clock align-self-center"></i>&nbsp;${format_crime_prision(crime)}</span>
+                                    <span><i class="fas fa-euro-sign align-self-center"></i>&nbsp;${format_money(item.preço)}</span>
                                 </div>
-                                
                             </small>
                         </div>
                     </div>
                     <div class="col align-items-center d-flex justify-content-end">
-                        <a class="text-danger align-middle"><i class="fa fa-times alert-close" onclick='remove_crime_from_summary(${crime_json})'></i></a>
+                        <a class="text-danger align-middle"><i class="fa fa-times alert-close" onclick='remove_crime_from_summary(${item.id})'></i></a>
                     </div>
                 </div>`;
-        });
+        }
 
         // Do the maths
-        let total_prision_min = 0
-        for (i = 0; i < items_adicionados.length; i++) {
-            total_prision_min += items_adicionados[i].prisao_min;
-        }
-
-        let total_prision = 0;
-        for (i = 0; i < items_adicionados.length; i++) {
-            total_prision += items_adicionados[i].prisao;
-        }
-
-        let total_prision_max = 0;
-        for (i = 0; i < items_adicionados.length; i++) {
-            total_prision_max += items_adicionados[i].prisao_max;
-        }
-
-        let total_fines = 0;
-        for (i = 0; i < items_adicionados.length; i++) {
-            total_fines += items_adicionados[i].coima;
-        }
-
-        let total_points = 0;
-        for (i = 0; i < items_adicionados.length; i++) {
-            total_points += items_adicionados[i].pontos;
+        let total_price = 0
+        for (let i = 0; i < items_adicionados.length; i++) {
+            total_price += items_adicionados[i].preço;
         }
 
         // Add Summary maths
         document.getElementById("summary_whole_box").innerHTML +=
             `<div class="card-footer articleSums">
                 <div class="row">
-                    <h5>Total multas: ${format_money(total_fines)} €</h5>
-                    ${total_prision_min > 25 ? `<h6>Sentença Mínima: Pena Máxima (${total_prision_min} anos)</h6>`: `<h6>Sentença Mínima: ${total_prision_min} anos</h6>`}
-                    ${total_prision > 25 ? `<h6>Sentença Recomendada: Pena Máxima (${total_prision} anos)</h6>`: `<h6>Sentença Recomendada: ${total_prision} anos</h6>`}
-                    ${total_prision_max > 25 ? `<h6>Sentença Máxima: Pena Máxima (${total_prision_max} anos)</h6>`: `<h6>Sentença Máxima: ${total_prision_max} anos</h6>`}
-                </div>
-            </div>`
-
-        // Add Summary Points
-        document.getElementById("summary_whole_box").innerHTML +=
-            `<div class="card-footer">
-                <div class="row">
-                    <div class="d-flex col articleSetting"> Redução de pontos </div>
-                    <div class="d-flex col justify-content-end"> ${total_points} </div>
+                    <h5>Preço Bruto: ${format_money(total_price)} €</h5>
                 </div>
             </div>`
 

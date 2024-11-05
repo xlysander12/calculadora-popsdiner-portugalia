@@ -16445,7 +16445,7 @@ html {
 .articleContainer .articleListing .col.card-group .articleCard {
     cursor: pointer;
     margin-bottom: 10px;
-    min-height: 160px
+    /*min-height: 160px*/
 }
 
 .articleContainer .articleListing .col.card-group .articleCard:hover {
