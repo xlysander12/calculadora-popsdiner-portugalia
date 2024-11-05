@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <title>Artigos penais (PortugáliaRP)</title>
+        <title>Pop's Diner (PortugáliaRP)</title>
         <link href="css/index.css" rel="stylesheet"/>
         <link rel="icon" type="image/x-icon" href="images/favico.ico">
         <script src="js/index.js"></script>
@@ -12,15 +12,10 @@
     <body onload="load_crimes_from_db()">
         <div>
             <nav class="navbar navbar-expand-lg navbar-custom px-3 sticky-top-nav">
-                <a class="navbar-brand router-link-active">Calculadora de Crimes Portugália</a>
+                <a class="navbar-brand router-link-active">Calculadora de Preços Pop's Diner Portugália</a>
                 <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
                 <div id="navbarSupportedContent" class="navbar-collapse">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a href="https://drive.google.com/file/d/17uWqHmNWbosthGiLpo7Wo7eP0AaSAwg8/view" target="_blank" aria-current="page" class="nav-link router-link-exact-active router-link-active">Código Penal</a></li>
-                        <li class="nav-item"><a href="https://drive.google.com/file/d/1eW4DuVA-eI03Cnzy5a6ETiVr5wO8Xl3g/view" target="_blank" aria-current="page" class="nav-link router-link-exact-active router-link-active">Código da Estrada</a></li>
-                        <li class="nav-item"><a href="https://docs.google.com/spreadsheets/d/1hyknz-w4QIgfel401Nq88V0oP7GjKsCYRo1sPHelaeI/edit?usp=sharing" target="_blank" aria-current="page" class="nav-link router-link-exact-active router-link-active">Código da Estrada Simplificado</a></li>
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0 d-flex justify-content-end headerDetailsContainer"><small class="headerDetails align-middle"><a href="https://github.com/xlysander12/artigos-penais-portugalia" target="_blank">lysander12<br>11/12/2023</a></small></form>
+                    <form class="form-inline my-2 my-lg-0 d-flex justify-content-end headerDetailsContainer"><small class="headerDetails align-middle"><a href="https://github.com/xlysander12/calculadora-popsdiner-portugalia" target="_blank">lysander12<br>11/12/2023</a></small></form>
                 </div>
             </nav>
             <div class="container-fluid mainContainer">
@@ -32,9 +27,9 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 mainHeader d-flex">
-                                        <h1 class="d-flex">Artigos penais</h1>
+                                        <h1 class="d-flex">Artigos</h1>
                                         <div class="form-group articleSearchGroup">
-                                            <input type="text" id="articleSearch" placeholder="Pesquisar Nome ou Artigo" class="form-control" oninput="search_crimes(document.getElementById('articleSearch').value)">
+                                            <input type="text" id="articleSearch" placeholder="Pesquisar Nome" class="form-control" oninput="search_items(document.getElementById('articleSearch').value)">
                                         </div>
                                     </div>
                                 </div>
@@ -43,12 +38,12 @@
     <!--                    Crimes-->
                         <div class="row">
                             <div class="container-fluid articleContainer">
-    <!--                            Texto da categoria contraordenacoes rodoviarias -->
+    <!--                            Texto da categoria Comidas -->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card articleCategory">
                                             <div class="card-body">
-                                                <h3 style="display: inline-flex">Contraordenações Rodoviárias</h3>
+                                                <h3 style="display: inline-flex">Comidas</h3>
                                                 <div class="d-inline-flex" style="position: absolute; right: 2%">
                                                     <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contraordenacoes_rodoviarias', this);"></i></a>
                                                 </div>
@@ -58,16 +53,16 @@
                                 </div>
 
     <!--                            Crimes infracoes-->
-                                <div id="contraordenacoes_rodoviarias" class="row articleListing">
+                                <div id="comidas" class="row articleListing">
 
                                 </div>
 
-                                <!--                            Texto da categoria contraordenacoes nauticas -->
+                                <!--                            Texto da categoria Bebidas -->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card articleCategory">
                                             <div class="card-body">
-                                                <h3 style="display: inline-flex">Contraordenações Náuticas</h3>
+                                                <h3 style="display: inline-flex">Bebidas</h3>
                                                 <div class="d-inline-flex" style="position: absolute; right: 2%">
                                                     <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contraordenacoes_nauticas', this);"></i></a>
                                                 </div>
@@ -77,16 +72,16 @@
                                 </div>
 
                                 <!--                            Crimes infracoes-->
-                                <div id="contraordenacoes_nauticas" class="row articleListing">
+                                <div id="bebidas" class="row articleListing">
 
                                 </div>
 
-    <!--                            Texto categoria contra pessoas -->
+    <!--                            Texto categoria Menus Carne -->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card articleCategory">
                                             <div class="card-body">
-                                                <h3 style="display: inline-flex">Crimes Contra as Pessoas</h3>
+                                                <h3 style="display: inline-flex">Menus - Carne</h3>
                                                 <div class="d-inline-flex" style="position: absolute; right: 2%">
                                                     <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contra_pessoas', this);"></i></a>
                                                 </div>
@@ -96,16 +91,16 @@
                                 </div>
 
                                 <!--                            Crimes pessoas-->
-                                <div id="contra_pessoas" class="row articleListing">
+                                <div id="menus-carne" class="row articleListing">
 
                                 </div>
 
-    <!--                            Texto categoria patrimonio-->
+    <!--                            Texto categoria Menus Peixe-->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card articleCategory">
                                             <div class="card-body">
-                                                <h3 style="display: inline-flex">Crimes contra o Património</h3>
+                                                <h3 style="display: inline-flex">Menus - Peixe</h3>
                                                 <div class="d-inline-flex" style="position: absolute; right: 2%">
                                                     <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contra_patrimonio', this);"></i></a>
                                                 </div>
@@ -115,16 +110,16 @@
                                 </div>
 
     <!--                                Crimes patrimonio-->
-                                <div id="contra_patrimonio" class="row articleListing">
+                                <div id="menus-peixe" class="row articleListing">
 
                                 </div>
 
-    <!--                            Texto categoria Identidade Cultural-->
+    <!--                            Texto categoria Menus Carne & Peixe-->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card articleCategory">
                                             <div class="card-body">
-                                                <h3 style="display: inline-flex">Crimes contra a Identidade Cultural</h3>
+                                                <h3 style="display: inline-flex">Menus - Carne & Peixe</h3>
                                                 <div class="d-inline-flex" style="position: absolute; right: 2%">
                                                     <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contra_identidade_cultural', this);"></i></a>
                                                 </div>
@@ -134,45 +129,7 @@
                                 </div>
 
     <!--                            Crimes Identidade Cultural-->
-                                <div id="contra_identidade_cultural" class="row articleListing">
-
-                                </div>
-
-    <!--                            Texto categoria vida em sociedade-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card articleCategory">
-                                            <div class="card-body">
-                                                <h3 style="display: inline-flex">Crimes contra a Vida em Sociedade</h3>
-                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
-                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contra_vida_sociedade', this);"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-    <!--                            Crimes vida em sociedade-->
-                                <div id="contra_vida_sociedade" class="row articleListing">
-
-                                </div>
-
-    <!--                            Texto categoria estado-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card articleCategory">
-                                            <div class="card-body">
-                                                <h3 style="display: inline-flex">Crimes contra o Estado</h3>
-                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
-                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('contra_estado', this);"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-    <!--                            Crimes estado-->
-                                <div id="contra_estado" class="row articleListing">
+                                <div id="menus-carne-peixe" class="row articleListing">
 
                                 </div>
                             </div>
@@ -184,7 +141,7 @@
                     <div class="col-md-4">
                         <div id="summary_whole_box" class="card sticky-top-resume">
                             <div class="card-header">
-                                <h1 class="text-center">Resumo</h1>
+                                <h1 class="text-center">Resumo da Venda</h1>
                             </div>
 
                                 <div id="article_list" class="card-body articleList">

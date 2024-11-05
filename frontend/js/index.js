@@ -1,46 +1,38 @@
-stored_crimes= {"contraordenacoes_rodoviarias": [], "contraordenacoes_nauticas": [], "contra_estado": [], "contra_identidade_cultural": [], "contra_patrimonio": [], "contra_pessoas": [], "contra_vida_sociedade": []}
-crimes_adicionados = []
+stored_items= {"comidas": [], "bebidas": [], "menus-carne": [], "menus-peixe": [], "menus-carne-peixe": []};
+items_adicionados = []
 
 function get_api_url() {
     if (window.location.hostname.includes("portugalia.")) {
-        return "/calculadora_popsdinner/api"
+        return "/calculadora_popsdiner/api"
     } else {
-        return "/portugalia/calculadora_popsdinner/api"
+        return "/portugalia/calculadora_popsdiner/api"
     }
 
 }
 
 async function load_crimes_from_db() {
-    // contraordanacoes_rodoviarias
-    let crimes = await fetch(`${get_api_url()}/crimes/contraordenacoes_rodoviarias`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contraordenacoes_rodoviarias = await crimes.json();
+    // Comidas
+    let items = await fetch(`${get_api_url()}/categorias/comidas`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
+    stored_items.comidas = await items.json();
 
-    // contraordanacoes_nauticas
-    crimes = await fetch(`${get_api_url()}/crimes/contraordenacoes_nauticas`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contraordenacoes_nauticas = await crimes.json();
+    // Bebidas
+    items = await fetch(`${get_api_url()}/categorias/bebidas`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
+    stored_items.bebidas = await items.json();
 
-    // crimes_contra_estado
-    crimes = await fetch(`${get_api_url()}/crimes/contra_estado`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contra_estado = await crimes.json();
+    // Menus Carne
+    items = await fetch(`${get_api_url()}/categorias/menus_carne`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
+    stored_items["menus-carne"] = await items.json();
 
-    // crimes_identidade_cultural
-    crimes = await fetch(`${get_api_url()}/crimes/contra_identidade_cultural`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contra_identidade_cultural = await crimes.json();
+    // Menus Peixe
+    items = await fetch(`${get_api_url()}/categorias/menus_peixe`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
+    stored_items["menus-peixe"] = await items.json();
 
-    // crimes_patrimonio
-    crimes = await fetch(`${get_api_url()}/crimes/contra_patrimonio`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contra_patrimonio = await crimes.json();
-
-    // crimes_pessoas
-    crimes = await fetch(`${get_api_url()}/crimes/contra_pessoas`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contra_pessoas = await crimes.json();
-
-    // crimes_vida_sociedade
-    crimes = await fetch(`${get_api_url()}/crimes/contra_vida_sociedade`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
-    stored_crimes.contra_vida_sociedade = await crimes.json();
+    // Menus Carne e Peixe
+    items = await fetch(`${get_api_url()}/categorias/menus_carne_peixe`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
+    stored_items["menus-carne-peixe"] = await items.json();
 
     // When all finished, build the cards
-    search_crimes("");
+    search_items("");
 }
 
 /**
@@ -48,17 +40,17 @@ async function load_crimes_from_db() {
  */
 function get_crime_by_article(article, isFine) {
     if (isFine) {
-        for (let i = 0; i < stored_crimes.contraordenacoes_rodoviarias.length; i++) {
-            if (stored_crimes.contraordenacoes_rodoviarias[i].artigo === article) {
-                return stored_crimes.contraordenacoes_rodoviarias[i];
+        for (let i = 0; i < stored_items.contraordenacoes_rodoviarias.length; i++) {
+            if (stored_items.contraordenacoes_rodoviarias[i].artigo === article) {
+                return stored_items.contraordenacoes_rodoviarias[i];
             }
         }
     }
 
-    for (let crime_type in stored_crimes) {
-        for (let i = 0; i < stored_crimes[crime_type].length; i++) {
-            if (stored_crimes[crime_type][i].artigo === article) {
-                return stored_crimes[crime_type][i];
+    for (let crime_type in stored_items) {
+        for (let i = 0; i < stored_items[crime_type].length; i++) {
+            if (stored_items[crime_type][i].artigo === article) {
+                return stored_items[crime_type][i];
             }
         }
     }
@@ -83,57 +75,53 @@ function format_crime_article(crime) {
 function format_crime_prision(crime) {
     return crime.prisao_min + "-" + crime.prisao + "-" + crime.prisao_max + " anos";
 }
-function build_crime_card(parent_div, crime) {
+function build_crime_card(parent_div, item) {
     // Create new element
     let card = document.createElement("div");
     card.className = "col card-group"
     card.innerHTML =
-        `<div class="card articleCard ${get_color_from_gravity(crime.gravidade)}">
+        `<div class="card articleCard ${get_color_from_gravity(0)}">
             <div class="card-body">
                 <div class="row g-0">
                     <div class="col-auto">
-                        <small class="articleType">${format_crime_article(crime)}</small>
+                        <small class="articleType">placeholder</small>
                     </div>
                     <div class="col d-flex justify-content-end">
                                 <!---->
                                 <!---->
                     </div>
                 </div>
-                    <p>${crime.nome}</p>
+                    <p>${item.nome}</p>
             </div>
             <div class="d-flex col-12 articleDetails px-3">
                 <span class="col-auto d-flex justify-content-start align-self-center">
                     <i class="fas fa-euro-sign align-self-center"></i> 
-                        <span class="text-success">${format_money(crime.coima)}</span>
-                </span>
-                <span class="col d-flex justify-content-end align-self-center">
-                    <i class="far fa-clock align-self-center"></i> 
-                        <span class="text-primary">&nbsp;${format_crime_prision(crime)}</span>
+                        <span class="text-success">${format_money(item.preço)}</span>
                 </span>
             </div>
         </div>`;
 
     card.addEventListener("click", () => {
-        add_crime_to_summary(crime);
+        add_crime_to_summary(item);
     });
 
     document.getElementById(parent_div).appendChild(card);
 }
 
-function search_crimes(search) {
+function search_items(search) {
     // Store categories names in list
-    let categories = ["contraordenacoes_rodoviarias", "contraordenacoes_nauticas", "contra_pessoas", "contra_patrimonio", "contra_identidade_cultural", "contra_vida_sociedade", "contra_estado"]
+    let categories = ["comidas", "bebidas", "menus-carne", "menus-peixe", "menus-carne-peixe"]
 
-    // Empty all crime categories
+    // Empty all categories
     for (let i = 0; i < categories.length; i++) {
         document.getElementById(categories[i]).innerHTML = "";
     }
 
     // Search crimes by categories
     categories.forEach((category) => {
-        stored_crimes[category].forEach((crime) => {
-            if (crime.nome.toLowerCase().includes(search.toLowerCase()) || crime.artigo === search) {
-                build_crime_card(category, crime);
+        stored_items[category].forEach((item) => {
+            if (item.nome.toLowerCase().includes(search.toLowerCase())) {
+                build_crime_card(category, item);
             }
         });
     });
@@ -141,27 +129,27 @@ function search_crimes(search) {
 }
 
 function add_crime_to_summary(crime) {
-    crimes_adicionados.push(crime);
+    items_adicionados.push(crime);
     update_summary();
 }
 
 function remove_crime_from_summary(crime) {
-    crimes_adicionados.splice(crimes_adicionados.map(c => c.nome).indexOf(crime.nome), 1);
+    items_adicionados.splice(items_adicionados.map(c => c.nome).indexOf(crime.nome), 1);
     update_summary();
 }
 
 function clear_summary() {
-    crimes_adicionados.length = 0;
+    items_adicionados.length = 0;
     update_summary();
 }
 
 function copy_articles() {
     let articles = "";
-    for (let i = 0; i < crimes_adicionados.length; i++) {
+    for (let i = 0; i < items_adicionados.length; i++) {
         // Remove text from inside [] brackets
-        articles += crimes_adicionados[i].nome.replace(/\[.*?\]/g, "").trimEnd();
+        articles += items_adicionados[i].nome.replace(/\[.*?\]/g, "").trimEnd();
 
-        if (i !== crimes_adicionados.length - 1) {
+        if (i !== items_adicionados.length - 1) {
             articles += " | ";
         }
 
@@ -204,13 +192,13 @@ function update_summary() {
         </div>`
 
     // If there are crimes added to summary show them
-    if (crimes_adicionados.length > 0) {
+    if (items_adicionados.length > 0) {
         // Add Crimes to List
         let list = document.getElementById("article_list");
         list.innerHTML = "";
 
         let i;
-        crimes_adicionados.forEach((crime) => {
+        items_adicionados.forEach((crime) => {
             let crime_json = JSON.stringify(crime);
             list.innerHTML += `<div role="alert" class="col-12 alert alert-dark alert-fine d-flex p-1 px-3">
                     <div class="col-auto">
@@ -239,28 +227,28 @@ function update_summary() {
 
         // Do the maths
         let total_prision_min = 0
-        for (i = 0; i < crimes_adicionados.length; i++) {
-            total_prision_min += crimes_adicionados[i].prisao_min;
+        for (i = 0; i < items_adicionados.length; i++) {
+            total_prision_min += items_adicionados[i].prisao_min;
         }
 
         let total_prision = 0;
-        for (i = 0; i < crimes_adicionados.length; i++) {
-            total_prision += crimes_adicionados[i].prisao;
+        for (i = 0; i < items_adicionados.length; i++) {
+            total_prision += items_adicionados[i].prisao;
         }
 
         let total_prision_max = 0;
-        for (i = 0; i < crimes_adicionados.length; i++) {
-            total_prision_max += crimes_adicionados[i].prisao_max;
+        for (i = 0; i < items_adicionados.length; i++) {
+            total_prision_max += items_adicionados[i].prisao_max;
         }
 
         let total_fines = 0;
-        for (i = 0; i < crimes_adicionados.length; i++) {
-            total_fines += crimes_adicionados[i].coima;
+        for (i = 0; i < items_adicionados.length; i++) {
+            total_fines += items_adicionados[i].coima;
         }
 
         let total_points = 0;
-        for (i = 0; i < crimes_adicionados.length; i++) {
-            total_points += crimes_adicionados[i].pontos;
+        for (i = 0; i < items_adicionados.length; i++) {
+            total_points += items_adicionados[i].pontos;
         }
 
         // Add Summary maths
@@ -302,5 +290,4 @@ function collapse_category(category, button) {
         button.className = "fa fa-chevron-up alert-collapse";
     } else
         button.className = "fa fa-chevron-down alert-collapse";
-
 }
