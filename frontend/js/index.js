@@ -1,5 +1,6 @@
 stored_items= {"comidas": [], "bebidas": [], "menus-carne": [], "menus-peixe": [], "menus-carne-peixe": []};
-items_adicionados = []
+items_adicionados = [];
+discount = 0;
 
 function get_api_url() {
     if (window.location.hostname.includes("portugalia.")) {
@@ -177,6 +178,11 @@ function format_money(amount) {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function updateDiscount(new_discount) {
+    discount = new_discount;
+    update_summary();
+}
+
 async function update_summary() {
     // Clean Summary
     document.getElementById("summary_whole_box").innerHTML =
@@ -214,10 +220,25 @@ async function update_summary() {
                 </div>`;
         }
 
+
+
         // Do the maths
         let total_price = 0
         for (let i = 0; i < items_adicionados.length; i++) {
             total_price += items_adicionados[i].preço;
+        }
+
+        let price_discount = 0;
+        for (let i = 0; i < items_adicionados.length; i++) {
+            if (items_adicionados[i].descontável === 0) {
+                price_discount += items_adicionados[i].preço;
+                continue;
+            }
+
+            // Calculate the discount
+            let discounted = items_adicionados[i].preço * (discount / 100);
+
+            price_discount += Math.ceil(items_adicionados[i].preço - discounted);
         }
 
         // Add Summary maths
@@ -225,18 +246,66 @@ async function update_summary() {
             `<div class="card-footer articleSums">
                 <div class="row">
                     <h5>Preço Bruto: ${format_money(total_price)} €</h5>
+                    
+                    <label>
+                        <input type="radio" id="nodiscount" name="discounttype" value=0>
+                        Sem desconto
+                    </label>
+                    
+                    <label>
+                        <input type="radio" id="twentydiscount" name="discounttype" value=20>
+                        20% desconto
+                    </label>
+                    
+                    <label>
+                        <input type="radio" id="thrityfivediscount" name="discounttype" value=35>
+                        35% desconto
+                    </label>
+                    
+                    <label>
+                        <input type="radio" id="fiftydiscount" name="discounttype" value=50>
+                        50% desconto
+                    </label>
+                    
+                    <h5>Preço com Desconto: ${format_money(price_discount)} €</h5>
                 </div>
             </div>`
-
 
         // Add Buttons
         document.getElementById("summary_whole_box").innerHTML +=
             `<div class="card-footer">
                 <div class="d-grid gap-2 col-12 mx-auto">
-                    <button type="button" class="btn btn-outline-primary" onclick="copy_articles()">Copiar artigos</button>
+                    <input type="text" id="workersname" placeholder="Nome do trabalhador" class="form-control form-control-summary" value=${localStorage.getItem("trabalhador") !== null ? localStorage.getItem("trabalhador"): ""}>
+                
+                    <button type="button" class="btn btn-outline-primary" onclick="copy_articles()">Validar Venda</button>
                     <button type="button" class="btn btn-outline-success" onclick="clear_summary()">Limpar</button>
                 </div>
             </div>`
+
+        // Check the discounts radio buttons
+        if (discount === 0) {
+            document.getElementById("nodiscount").checked = true;
+        } else if (discount === 20) {
+            document.getElementById("twentydiscount").checked = true;
+        } else if (discount === 35) {
+            document.getElementById("thrityfivediscount").checked = true;
+        } else if (discount === 50) {
+            document.getElementById("fiftydiscount").checked = true;
+        }
+
+        // Add event listeners to radio buttons
+        document.getElementById("nodiscount").addEventListener("change", () => {
+            updateDiscount(0);
+        });
+        document.getElementById("twentydiscount").addEventListener("change", () => {
+            updateDiscount(20);
+        });
+        document.getElementById("thrityfivediscount").addEventListener("change", () => {
+            updateDiscount(35);
+        });
+        document.getElementById("fiftydiscount").addEventListener("change", () => {
+            updateDiscount(50);
+        });
     }
 }
 
@@ -245,6 +314,7 @@ function collapse_category(category, button) {
 
     if (document.getElementById(category).classList.contains("collapse")) {
         button.className = "fa fa-chevron-up alert-collapse";
-    } else
+    } else {
         button.className = "fa fa-chevron-down alert-collapse";
+    }
 }
