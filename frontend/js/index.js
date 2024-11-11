@@ -90,6 +90,15 @@ function search_items(search) {
 }
 
 function add_item_to_summary(item) {
+    // Make sure this item is not already in the summary
+    for (let i = 0; i < items_adicionados.length; i++) {
+        if (items_adicionados[i].item.id === item.id) {
+            items_adicionados[i].amount++;
+            update_summary();
+            return;
+        }
+    }
+
     let final_item = {item: item, amount: 1}
     items_adicionados.push(final_item);
     update_summary();
