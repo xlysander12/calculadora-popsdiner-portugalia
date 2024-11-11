@@ -238,7 +238,7 @@ function update_summary() {
 
         let price_discount = 0;
         for (let i = 0; i < items_adicionados.length; i++) {
-            if (items_adicionados[i].descontável === 0) {
+            if (items_adicionados[i].item.descontável === 0) {
                 price_discount += items_adicionados[i].item.preço;
                 continue;
             }
