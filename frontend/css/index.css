@@ -16317,12 +16317,12 @@ fieldset:disabled .btn {
 
 body,
 html {
-    background: #c5c6c7;
+    background: #98ecf4;
     color: #fff
 }
 
 .navbar-custom {
-    background: #1f2833;
+    background: #d03434;
     margin-bottom: 20px
 }
 
@@ -16511,11 +16511,11 @@ html {
 }
 
 .card {
-    background: #1f2833
+    background: #e06666
 }
 
 .alert-fine {
-    background: #647fa1;
+    background: #94fff4;
     color: #fff;
     transition: all .5s ease
 }

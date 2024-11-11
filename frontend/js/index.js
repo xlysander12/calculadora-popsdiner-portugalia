@@ -149,7 +149,7 @@ function handleItemAmountChange(event) {
 function update_summary() {
     // Clean Summary
     document.getElementById("summary_whole_box").innerHTML =
-        `<div id="summary_whole_box" class="card sticky-top-resume">
+        `<div id="summary_whole_box" class="card sticky-top-resume" style="background-color: #d03434">
             <div class="card-header">
                 <h1 class="text-center">Resumo da Venda</h1>
             </div>
@@ -171,10 +171,10 @@ function update_summary() {
 
             list.innerHTML += `<div role="alert" class="col-12 alert alert-dark alert-fine d-flex p-1 px-3">
                     <div class="col-auto">
-                        <div class="row" style="width: 20rem"><small style="word-wrap: break-word">${item.nome}</small></div>
+                        <div class="row" style="width: 20rem"><small style="word-wrap: break-word; color: black">${item.nome}</small></div>
                         <div class="row text-article">
                             <small>
-                                <div style="color: lightgray">
+                                <div style="color: gray">
                                     <span><i class="fas fa-euro-sign align-self-center"></i>&nbsp;${format_money(item.preço)}</span>
                                 </div>
                             </small>
