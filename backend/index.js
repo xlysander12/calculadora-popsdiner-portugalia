@@ -1,4 +1,5 @@
 const express = require('express');
+const serveIndex = require('serve-index');
 const path = require('path');
 
 // Initializing the Router
@@ -8,7 +9,7 @@ const app = express.Router();
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // Serving the history files
-app.use("/history", express.static(path.join(__dirname, 'history')));
+app.use("/historico", express.static(path.join(__dirname, 'history')), serveIndex(path.join(__dirname, 'history'), { icons: true, view: 'details' }));
 
 // Adding the API Router
 app.use("/api", require('./api/index.js'));

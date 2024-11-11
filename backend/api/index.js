@@ -14,10 +14,10 @@ app.use(bodyParser.json());
 
 // Initializing the MySQL connection
 const mysqlPool = mysql.createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    host: process.env.POPSDINER_MYSQL_HOST,
+    user: process.env.POPSDINER_MYSQL_USER,
+    password: process.env.POPSDINER_MYSQL_PASSWORD,
+    database: process.env.POPSDINER_MYSQL_DATABASE,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
