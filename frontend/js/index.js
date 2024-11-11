@@ -11,7 +11,7 @@ function get_api_url() {
 
 }
 
-async function load_crimes_from_db() {
+async function load_items_from_db() {
     // Comidas
     let items = await fetch(`${get_api_url()}/categorias/comidas`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
     stored_items.comidas = await items.json();
@@ -36,46 +36,6 @@ async function load_crimes_from_db() {
     search_items("");
 }
 
-/**
- * @deprecated Since 07/10/2023. Pass proper crimeobject to functions instead of article number
- */
-function get_crime_by_article(article, isFine) {
-    if (isFine) {
-        for (let i = 0; i < stored_items.contraordenacoes_rodoviarias.length; i++) {
-            if (stored_items.contraordenacoes_rodoviarias[i].artigo === article) {
-                return stored_items.contraordenacoes_rodoviarias[i];
-            }
-        }
-    }
-
-    for (let crime_type in stored_items) {
-        for (let i = 0; i < stored_items[crime_type].length; i++) {
-            if (stored_items[crime_type][i].artigo === article) {
-                return stored_items[crime_type][i];
-            }
-        }
-    }
-}
-
-function format_crime_article(crime) {
-    let subalineas = ["a", "b", "c", "d", "e"];
-
-    let str = "Artigo nº " + crime.artigo;
-
-    if (crime.alinea !== 0) {
-        str += "." + crime.alinea;
-
-        if (crime.subalinea !== 0) {
-            str += "." + subalineas[crime.subalinea - 1];
-        }
-    }
-
-    return str;
-}
-
-function format_crime_prision(crime) {
-    return crime.prisao_min + "-" + crime.prisao + "-" + crime.prisao_max + " anos";
-}
 function build_item_card(parent_div, item) {
     // Create new element
     let card = document.createElement("div");
@@ -129,12 +89,13 @@ function search_items(search) {
 }
 
 function add_item_to_summary(item) {
-    items_adicionados.push(item);
+    let final_item = {item: item, amount: 1}
+    items_adicionados.push(final_item);
     update_summary();
 }
 
 function remove_crime_from_summary(item) {
-    items_adicionados = items_adicionados.filter((element) => element.id !== item);
+    items_adicionados = items_adicionados.filter((element) => element.item.id !== item);
     update_summary();
 }
 
@@ -161,19 +122,6 @@ function copy_articles() {
     });
 }
 
-function get_color_from_gravity(gravity) {
-    switch (gravity) {
-        case 0:
-            return "articleFine";
-        case 1:
-            return "articleMinor";
-        case 2:
-            return "articleMedian";
-        case 3:
-            return "articleMajor";
-    }
-}
-
 function format_money(amount) {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -183,7 +131,22 @@ function updateDiscount(new_discount) {
     update_summary();
 }
 
-async function update_summary() {
+function setItemAmount(item_id, amount) {
+    for (let i = 0; i < items_adicionados.length; i++) {
+        if (items_adicionados[i].item.id === item_id) {
+            items_adicionados[i].amount = amount;
+            break;
+        }
+    }
+
+    update_summary();
+}
+
+function handleItemAmountChange(event) {
+    setItemAmount()
+}
+
+function update_summary() {
     // Clean Summary
     document.getElementById("summary_whole_box").innerHTML =
         `<div id="summary_whole_box" class="card sticky-top-resume">
@@ -202,7 +165,10 @@ async function update_summary() {
         let list = document.getElementById("article_list");
         list.innerHTML = "";
 
-        for (let item of items_adicionados) {
+        for (let entry of items_adicionados) {
+            let item = entry.item;
+            let amount = entry.amount;
+
             list.innerHTML += `<div role="alert" class="col-12 alert alert-dark alert-fine d-flex p-1 px-3">
                     <div class="col-auto">
                         <div class="row" style="width: 20rem"><small style="word-wrap: break-word">${item.nome}</small></div>
@@ -215,6 +181,7 @@ async function update_summary() {
                         </div>
                     </div>
                     <div class="col align-items-center d-flex justify-content-end">
+                        <input id='item${item.id}' type="number" min="1" value='${amount}' class="align-middle" style="max-width: 40px; background: transparent" onchange='setItemAmount(${item.id}, this.value)'/>
                         <a class="text-danger align-middle"><i class="fa fa-times alert-close" onclick='remove_crime_from_summary(${item.id})'></i></a>
                     </div>
                 </div>`;
@@ -222,23 +189,25 @@ async function update_summary() {
 
 
 
+
         // Do the maths
         let total_price = 0
         for (let i = 0; i < items_adicionados.length; i++) {
-            total_price += items_adicionados[i].preço;
+            total_price += items_adicionados[i].item.preço * items_adicionados[i].amount;
         }
 
         let price_discount = 0;
         for (let i = 0; i < items_adicionados.length; i++) {
             if (items_adicionados[i].descontável === 0) {
-                price_discount += items_adicionados[i].preço;
+                price_discount += items_adicionados[i].item.preço;
                 continue;
             }
 
             // Calculate the discount
-            let discounted = items_adicionados[i].preço * (discount / 100);
+            let discounted = items_adicionados[i].item.preço * (discount / 100);
 
-            price_discount += Math.ceil(items_adicionados[i].preço - discounted);
+            // Apply the discount to every instance of the item
+            price_discount += (items_adicionados[i].item.preço - discounted) * items_adicionados[i].amount;
         }
 
         // Add Summary maths

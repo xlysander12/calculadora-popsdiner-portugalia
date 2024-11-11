@@ -9,7 +9,7 @@
         <script src="js/index.js"></script>
     </head>
 
-    <body onload="load_crimes_from_db()">
+    <body onload="load_items_from_db()">
         <div>
             <nav class="navbar navbar-expand-lg navbar-custom px-3 sticky-top-nav">
                 <a class="navbar-brand router-link-active">Calculadora de Preços Pop's Diner Portugália</a>
@@ -38,6 +38,64 @@
     <!--                    Crimes-->
                         <div class="row">
                             <div class="container-fluid articleContainer">
+                                <!--                            Texto categoria Menus Carne & Peixe-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card articleCategory">
+                                            <div class="card-body">
+                                                <h3 style="display: inline-flex">Menus - Carne & Peixe</h3>
+                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
+                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('menus-carne-peixe', this);"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--                            Crimes Identidade Cultural-->
+                                <div id="menus-carne-peixe" class="row articleListing">
+
+                                </div>
+
+
+                                <!--                            Texto categoria Menus Carne -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card articleCategory">
+                                            <div class="card-body">
+                                                <h3 style="display: inline-flex">Menus - Carne</h3>
+                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
+                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('menus-carne', this);"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--                            Crimes pessoas-->
+                                <div id="menus-carne" class="row articleListing">
+
+                                </div>
+
+                                <!--                            Texto categoria Menus Peixe-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card articleCategory">
+                                            <div class="card-body">
+                                                <h3 style="display: inline-flex">Menus - Peixe</h3>
+                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
+                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('menus-peixe', this);"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--                                Menus Carne & Peixe-->
+                                <div id="menus-peixe" class="row articleListing">
+
+                                </div>
+
     <!--                            Texto da categoria Comidas -->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -76,62 +134,6 @@
 
                                 </div>
 
-    <!--                            Texto categoria Menus Carne -->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card articleCategory">
-                                            <div class="card-body">
-                                                <h3 style="display: inline-flex">Menus - Carne</h3>
-                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
-                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('menus-carne', this);"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--                            Crimes pessoas-->
-                                <div id="menus-carne" class="row articleListing">
-
-                                </div>
-
-    <!--                            Texto categoria Menus Peixe-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card articleCategory">
-                                            <div class="card-body">
-                                                <h3 style="display: inline-flex">Menus - Peixe</h3>
-                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
-                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('menus-peixe', this);"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-    <!--                                Crimes patrimonio-->
-                                <div id="menus-peixe" class="row articleListing">
-
-                                </div>
-
-    <!--                            Texto categoria Menus Carne & Peixe-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card articleCategory">
-                                            <div class="card-body">
-                                                <h3 style="display: inline-flex">Menus - Carne & Peixe</h3>
-                                                <div class="d-inline-flex" style="position: absolute; right: 2%">
-                                                    <a style="color: #ffffff; font-size: 30px" class="align-middle"><i class="fa fa-chevron-down alert-collapse" onclick="collapse_category('menus-carne-peixe', this);"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-    <!--                            Crimes Identidade Cultural-->
-                                <div id="menus-carne-peixe" class="row articleListing">
-
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -144,7 +146,7 @@
                                 <h1 class="text-center">Resumo da Venda</h1>
                             </div>
 
-                                <div id="article_list" class="card-body articleList">
+                            <div id="article_list" class="card-body articleList">
                                 <p class="text-center"><small>Ainda não foram adicionados artigos</small></p>
                             </div>
                         </div>

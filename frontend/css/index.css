@@ -12401,7 +12401,7 @@ fieldset:disabled .btn {
 
 .sticky-top-resume {
     position: sticky;
-    top: 100px;
+    top: 80px;
     z-index: 1020
 }
 
@@ -16611,7 +16611,7 @@ html {
 .articleList {
     padding-bottom: .25rem !important;
     overflow: auto;
-    max-height: 40vh !important;
+    max-height: 35vh !important;
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
 }
