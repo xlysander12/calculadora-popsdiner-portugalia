@@ -1,6 +1,7 @@
-stored_items= {"comidas": [], "bebidas": [], "menus-carne": [], "menus-peixe": [], "menus-carne-peixe": []};
-items_adicionados = [];
-discount = 0;
+let stored_items= {"comidas": [], "bebidas": [], "menus-carne": [], "menus-peixe": [], "menus-carne-peixe": []};
+let items_adicionados = [];
+let discount = 0;
+let is_sale_processing = false;
 
 function get_api_url() {
     if (window.location.hostname.includes("portugalia.")) {
@@ -104,22 +105,56 @@ function clear_summary() {
     update_summary();
 }
 
-function copy_articles() {
-    let articles = "";
-    for (let i = 0; i < items_adicionados.length; i++) {
-        // Remove text from inside [] brackets
-        articles += items_adicionados[i].nome.replace(/\[.*?\]/g, "").trimEnd();
-
-        if (i !== items_adicionados.length - 1) {
-            articles += " | ";
-        }
-
+async function submit_sale(value) {
+    // Make sure another sale isn't being processed
+    if (is_sale_processing) {
+        return;
     }
-    navigator.clipboard.writeText(articles).then(function() {
-        alert("Artigos copiados para a área de transferência! (CTRL + V)");
-    }, function() {
-        alert("Não foi possível copiar os artigos!");
+
+    // Set the flag
+    is_sale_processing = true;
+
+    // Build the array with all items
+    let items = [];
+    for (let i = 0; i < items_adicionados.length; i++) {
+        let item = items_adicionados[i];
+
+        for (let j = 0; j < item.amount; j++) {
+            items.push(item.item.id);
+        }
+    }
+
+    let worker = document.getElementById("workersname").value;
+    if (worker === "") {
+        alert("Por favor insira o nome do trabalhador");
+        return;
+    }
+
+    // Store the worker name in localstorage
+    localStorage.setItem("funcionario", worker);
+
+    // Send the request
+    let response = await fetch(`${get_api_url()}/venda`, {
+        method: "POST",
+        headers: {"Accept": "application/json", "Content-Type": "application/json"},
+        body: JSON.stringify({
+            vendedor: worker,
+            items: items,
+            valor: value
+        })
     });
+
+    if (response.status !== 200) {
+        alert("Erro ao submeter a venda");
+        return;
+    }
+
+    let json = await response.json();
+
+    alert(`Venda #${json.id} submetida com sucesso`);
+
+    // Clear the summary
+    clear_summary();
 }
 
 function format_money(amount) {
@@ -140,10 +175,6 @@ function setItemAmount(item_id, amount) {
     }
 
     update_summary();
-}
-
-function handleItemAmountChange(event) {
-    setItemAmount()
 }
 
 function update_summary() {
@@ -244,9 +275,9 @@ function update_summary() {
         document.getElementById("summary_whole_box").innerHTML +=
             `<div class="card-footer">
                 <div class="d-grid gap-2 col-12 mx-auto">
-                    <input type="text" id="workersname" placeholder="Nome do trabalhador" class="form-control form-control-summary" value=${localStorage.getItem("trabalhador") !== null ? localStorage.getItem("trabalhador"): ""}>
+                    <input type="text" id="workersname" placeholder="Nome do funcionario" class="form-control form-control-summary" value='${localStorage.getItem("funcionario") !== null ? localStorage.getItem("funcionario"): ""}'>
                 
-                    <button type="button" class="btn btn-outline-primary" onclick="copy_articles()">Validar Venda</button>
+                    <button type="button" class="btn btn-outline-primary" onclick='submit_sale(${price_discount})'>Validar Venda</button>
                     <button type="button" class="btn btn-outline-success" onclick="clear_summary()">Limpar</button>
                 </div>
             </div>`
