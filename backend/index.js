@@ -1,6 +1,12 @@
 const express = require('express');
 const serveIndex = require('serve-index');
 const path = require('path');
+const fs = require('fs');
+
+// Make sure the history folder exists
+if (!fs.existsSync(path.join(__dirname, 'history'))) {
+  fs.mkdirSync(path.join(__dirname, 'history'));
+}
 
 // Initializing the Router
 const app = express.Router();
