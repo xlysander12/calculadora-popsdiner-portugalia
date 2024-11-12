@@ -166,6 +166,43 @@ async function submit_sale(value) {
     clear_summary();
 }
 
+async function export_sales() {
+    // Ask for the password
+    let password = prompt("Por favor insira a password de exportação de vendas");
+
+    // Make the request to export the sales to a text file
+    let response = await fetch(`${get_api_url()}/exportar`, {
+        method: "POST",
+        headers: {"Accept": "application/json", "Content-Type": "application/json"},
+        body: JSON.stringify({
+            password: password
+        })
+    });
+
+    // Wait for the response and act accordingly
+    if (response.status === 401) { // Wrong password
+        alert("Password incorreta");
+        return;
+    }
+
+    if (response.status === 404) {
+        alert("Não existem novas vendas para exportar");
+        return;
+    }
+
+    if (response.status !== 200) {
+        alert("Erro ao exportar vendas");
+        return;
+    }
+
+    // Get the text file url
+    let json = await response.json();
+    let url = json.url;
+
+    // Open the file in a new tab
+    window.open(window.location.pathname + url, "_blank");
+}
+
 function format_money(amount) {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -287,6 +324,7 @@ function update_summary() {
                     <input type="text" id="workersname" placeholder="Nome do funcionario" class="form-control form-control-summary" value='${localStorage.getItem("funcionario") !== null ? localStorage.getItem("funcionario"): ""}'>
                 
                     <button type="button" class="btn btn-outline-primary" onclick='submit_sale(${price_discount})'>Validar Venda</button>
+                    <button type="button" class="btn btn-outline-warning" onclick='export_sales()'>Exportar Vendas</button>
                     <button type="button" class="btn btn-outline-success" onclick="clear_summary()">Limpar</button>
                 </div>
             </div>`

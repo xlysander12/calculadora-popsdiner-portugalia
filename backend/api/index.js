@@ -146,9 +146,9 @@ app.post("/exportar", async (req, res) => {
 
             content += `==== Venda #${sale.id} ====\n`;
             content += `Funcionário: ${sale.vendedor}\n`;
-            content += `Preço Bruto: ${bruto}\n`;
+            content += `Preço Bruto: ${bruto} €\n`;
             content += `Desconto Aplicado: ${(1 - ((sale.valor - nonDiscountableItemsSum) / (bruto - nonDiscountableItemsSum))) * 100}%\n`;
-            content += `Preço Final: ${sale.valor}\n`;
+            content += `Preço Final: ${sale.valor} €\n`;
             content += "Items:\n";
 
             for (let i = 0; i < items.length; i++) {
@@ -168,7 +168,7 @@ app.post("/exportar", async (req, res) => {
 
         // Create the text file and place the content in it
         fs.writeFile(path.join(__dirname, "..", "history", fileName), content, () => {
-            res.json({ url: `/historico/${fileName}` });
+            res.json({ url: `historico/${fileName}` });
         });
     } catch (e) {
         console.error(e);
