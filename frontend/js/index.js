@@ -162,6 +162,9 @@ async function submit_sale(value) {
 
     alert(`Venda #${json.id} submetida com sucesso`);
 
+    // Reset the flag
+    is_sale_processing = false;
+
     // Clear the summary
     clear_summary();
 }
