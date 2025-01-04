@@ -1,3 +1,6 @@
 /backend/node_modules/
 /backend/.env
 /backend/history
+/.idea/dataSources.xml
+/.idea/dataSources.local.xml
+/.idea/dataSources/

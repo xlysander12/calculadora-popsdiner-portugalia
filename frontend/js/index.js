@@ -1,4 +1,4 @@
-let stored_items= {"comidas": [], "bebidas": [], "menus-carne": [], "menus-peixe": [], "menus-carne-peixe": []};
+let stored_items= {"comidas": [], "bebidas": [], "menus-carne": [], "menus-peixe": [], "menus-carne-peixe": [], "menus-pastelaria": []};
 let items_adicionados = [];
 let discount = 0;
 let is_sale_processing = false;
@@ -32,6 +32,10 @@ async function load_items_from_db() {
     // Menus Carne e Peixe
     items = await fetch(`${get_api_url()}/categorias/menus_carne_peixe`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
     stored_items["menus-carne-peixe"] = await items.json();
+
+    // Menus Pastelaria
+    items = await fetch(`${get_api_url()}/categorias/menus_pastelaria`, {method: "GET", headers: {"Accept": "application/json", "Content-Type": "application/json"}})
+    stored_items["menus-pastelaria"] = await items.json();
 
     // When all finished, build the cards
     search_items("");
@@ -71,7 +75,7 @@ function build_item_card(parent_div, item) {
 
 function search_items(search) {
     // Store categories names in list
-    let categories = ["comidas", "bebidas", "menus-carne", "menus-peixe", "menus-carne-peixe"]
+    let categories = ["comidas", "bebidas", "menus-carne", "menus-peixe", "menus-carne-peixe", "menus-pastelaria"]
 
     // Empty all categories
     for (let i = 0; i < categories.length; i++) {

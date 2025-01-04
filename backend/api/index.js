@@ -25,7 +25,7 @@ const mysqlPool = mysql.createPool({
 });
 
 // Util Vars
-const categorias = ["bebidas", "comidas", "menus_carne", "menus_peixe", "menus_carne_peixe"];
+const categorias = ["bebidas", "comidas", "menus_carne", "menus_peixe", "menus_carne_peixe", "menus_pastelaria"];
 
 // Route to fetch categories
 app.get("/categorias/:category", async (req, res) => {
@@ -42,7 +42,7 @@ app.get("/categorias/:category", async (req, res) => {
         res.json(rows);
     } catch (e) {
         console.error(e);
-        res.status(500).json({ error: "Failed to fetch crimes" });
+        res.status(500).json({ error: "Failed to fetch items" });
     }
 });
 
