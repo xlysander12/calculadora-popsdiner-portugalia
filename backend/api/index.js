@@ -1,17 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+
 const path = require('path');
 const fs = require('fs');
 const mysql = require('mysql2/promise');
-const env = require('dotenv');
-
-// Loading the environment variables
-env.config({path: path.join(__dirname, '..', '.env')});
 
 // Initializing the Router
 const app = express.Router();
-
-app.use(bodyParser.json());
 
 // Initializing the MySQL connection
 const mysqlPool = mysql.createPool({

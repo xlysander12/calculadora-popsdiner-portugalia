@@ -1,29 +1,20 @@
 const express = require('express');
-const serveIndex = require('serve-index');
-const path = require('path');
-const fs = require('fs');
+const bodyParser = require('body-parser');
+const env = require('dotenv');
+const path = require("path");
+// Loading the environment variables
+env.config({path: path.join(__dirname, '.env')});
 
-// Make sure the history folder exists
-if (!fs.existsSync(path.join(__dirname, 'history'))) {
-  fs.mkdirSync(path.join(__dirname, 'history'));
-}
+// Creating the app
+const app = express();
 
-// Initializing the Router
-const app = express.Router();
+// Initializing the body parser
+app.use(bodyParser.json());
 
-// Serving the frontend files
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
+// Adding the router
+app.use("/portugalia/calculadora_popsdiner", require('./main.js'));
 
-// Serving the history files
-app.use("/historico", express.static(path.join(__dirname, 'history')), serveIndex(path.join(__dirname, 'history'), { icons: true, view: 'details' }));
-
-// Adding the API Router
-app.use("/api", require('./api/index.js'));
-
-// Adding the index route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+// Starting the server
+app.listen(process.env["HTTP_PORT"], () => {
+    console.log(`Server listening on port ${process.env["HTTP_PORT"]}`);
 });
-
-// Exporting the Router
-module.exports = app;
